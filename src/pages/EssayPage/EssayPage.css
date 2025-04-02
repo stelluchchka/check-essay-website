@@ -74,6 +74,7 @@
 
 .like-button {
   margin-left: auto;
+  margin-right: 1vh;
   background-color: #25274D;
   margin-top: 1vh;
   color: #01B4BC;

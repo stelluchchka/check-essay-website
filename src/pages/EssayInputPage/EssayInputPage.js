@@ -132,9 +132,10 @@ const EssayInputPage = () => {
   };
 
   const handleCheck = async () => {
-    if (!essayText) {
-      setMessage('введите текст сочинения!')
+    if ((essayText.match(/[А-Яа-яЁёA-Za-z]+(?:-[А-Яа-яЁёA-Za-z]+)?/g) || []).length < 250) {
+      setMessage('текст сочинения должен быть больше 250 символов!')
     } else {
+      handleSave()
       try {
         const data = {
             variant_id: id,
@@ -150,15 +151,15 @@ const EssayInputPage = () => {
             withCredentials: true
         };
         const response = await fetch(`http://localhost:8080/essays/`  + essayId + `/save`, options);
-        if (response.status === 200) {
+        if (response.status === 201 || response.status === 200) {
           setMessage('сочинение отправлено на проверку')
           console.log("Сочинение отправлено на проверку")
-          navigate('/profile');
 
           console.log(response)
           const result = await response.json();
           const essay_id = result.essay_id;
           setEssayId(essay_id)
+          navigate('/profile');
         } else {
           console.log('Ошибка сервера');
         }

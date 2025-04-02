@@ -8,6 +8,7 @@ function EssayPage() {
   const { id } = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [essay, setEssay] = useState(null);
+  const [status, setStatus] = useState('');
   const [isPublished, setIsPublished] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -114,6 +115,7 @@ function EssayPage() {
           setEssay(data);
           setLikes(data["likes"]);
           setIsPublished(data["is_published"])
+          setStatus(data["status"])
   
         } catch (error) {
           console.error('Ошибка загрузки:', error);
@@ -129,6 +131,7 @@ function EssayPage() {
         setEssay(data);
         setLikes(data["likes"]);
         setIsPublished(data["is_published"])
+        setStatus(data["status"])
 
       } catch (error) {
         console.error('Ошибка загрузки:', error);
@@ -165,6 +168,44 @@ function EssayPage() {
         ...prevEssay,
         likes: updatedLikes,
       }));
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handlePublishToggle = async () => {
+    try {
+      const url = `http://localhost:8080/essays/${id}/publish`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при публикации');
+      }
+      setIsPublished(true)
+      console.log("Сочинение опубликовано")
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleAppealToggle = async () => {
+    try {
+      const url = `http://localhost:8080/essays/${id}/appeal`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при подаче апелляции');
+      }
+      console.log("Сочинение подано на апелляцию")
+      setStatus("appeal")
 
     } catch (error) {
       console.error(error.message);
@@ -238,11 +279,23 @@ function EssayPage() {
             автор {essay.author_nickname}
           </div>
 
-          {isPublished && 
+        {isPublished && 
           <div className='like-content'>
             <div className="like-text">{likes}</div>
             <button onClick={handleLikeToggle} className={`like-button ${isLiked ? 'liked' : ''}`} disabled={!isLoggedIn}>
               {isLiked ? 'Убрать лайк' : 'Нравится'}
+            </button>   
+          </div>    
+        }
+        {!isPublished &&
+          <div className='like-content'>
+            <button onClick={handlePublishToggle} className={`like-button`}>Опубликовать
+            </button>   
+          </div>    
+        }
+        {ifUserEssay && status === 'checked' &&
+          <div className='like-content'>
+            <button onClick={handleAppealToggle} className={`like-button`}>Апеллировать
             </button>   
           </div>    
         }
