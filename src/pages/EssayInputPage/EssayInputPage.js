@@ -186,28 +186,6 @@ const EssayInputPage = () => {
         }
         
       </div>
-      {id === 0 ? 
-        <div className="form-container">
-          <h1>Ключи для проверки</h1>
-          <form action="/submit" method="POST">
-            <div className="form-group">
-              <label for="essay-title">Введите название сочинения</label>
-              <input type="text" id="essay-title" name="essay-title" placeholder="Название сочинения" required/>
-            </div>
-
-            <div className="form-group">
-              <label for="essay-text">Введите текст сочинения</label>
-              <textarea id="essay-text" name="essay-text" placeholder="Текст сочинения" required></textarea>
-            </div>
-
-            <div className="form-group">
-              <label for="author-position">Введите позицию автора</label>
-              <textarea id="author-position" name="author-position" placeholder="Позиция автора" required></textarea>
-            </div>
-          </form>
-        </div>
-
-      :
       <div>
         <div className="variant-title-section">
         {isLoading ? 'Загрузка...' : variantTitle}
@@ -215,8 +193,7 @@ const EssayInputPage = () => {
         <div className="variant-text-section">
           {isLoading ? 'Загрузка...' : variantText}
         </div>
-      </div>    
-      }
+      </div>
 
       <div className="essay-page">
         <div className="essay-hint-section">

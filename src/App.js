@@ -10,6 +10,7 @@ import EssaysPage from './pages/EssaysPage/EssaysPage';
 import EssayInputPage from './pages/EssayInputPage/EssayInputPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AppealsPage from './pages/AppealsPage/AppealsPage';
+import CreateVariantPage from './pages/CreateVariantPage/CreateVariantPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/variants/individual" element={<CreateVariantPage />} />
         <Route path="/variants" element={<VariantsPage />} />
         <Route path="/appeals" element={<AppealsPage />} />
         <Route path="/essays" element={<EssaysPage />} />

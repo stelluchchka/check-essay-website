@@ -30,7 +30,7 @@ function VariantsPage() {
         </button>
           ))}
         </div>
-        <button className="btn-create" onClick={() => navigate(`/essay-input/0`)}>написать сочинение по своему варианту</button>
+        <button className="btn-create" onClick={() => navigate(`/variants/individual`)}>написать сочинение по своему варианту</button>
       </section>
     </div>
   );
