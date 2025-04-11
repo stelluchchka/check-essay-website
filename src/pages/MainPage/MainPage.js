@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from '../../components/Header/Header';
 import "./MainPage.css";
+import config from '../../config/config';
 
 const MainPage = () => {
   const [usersCount, setUsersCount] = useState(0);
@@ -9,7 +10,7 @@ const MainPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-        fetch('http://localhost:8080/counts')
+        fetch(`${config.API_URL}/counts`)
         .then(response => response.json())
         .then(data => {
             setVariantsCount(data["variants_count"]);

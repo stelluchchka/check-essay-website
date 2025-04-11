@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
+import config from '../../config/config';
 
 function RegisterPage() {
   const [mail, setMail] = useState('');
@@ -44,7 +45,7 @@ function RegisterPage() {
             credentials: "include",
             withCredentials: true
         };
-        const response = await fetch(`http://localhost:8080/users`, options);
+        const response = await fetch(`${config.API_URL}/users`, options);
         if (response.status === 201) {
           navigate('/');
         } else if (response.status === 400) {

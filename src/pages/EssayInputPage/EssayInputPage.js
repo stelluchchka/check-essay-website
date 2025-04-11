@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './EssayInputPage.css';
 import Header from '../../components/Header/Header';
+import config from '../../config/config';
 
 const EssayInputPage = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const EssayInputPage = () => {
   useEffect(() => {
     const fetchVariantData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/variants/${id}`);
+        const response = await fetch(`${config.API_URL}/variants/${id}`);
         if (!response.ok) {
           throw new Error(`Ошибка при загрузке варианта ${id}`);
         }
@@ -42,7 +43,7 @@ const EssayInputPage = () => {
 
     const fetchEssayData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/users/me/essays/${essay_id}`);
+        const response = await fetch(`${config.API_URL}/users/me/essays/${essay_id}`);
         if (!response.ok) {
           throw new Error(`Ошибка при загрузке сочинения ${essay_id}`);
         }
@@ -87,7 +88,7 @@ const EssayInputPage = () => {
             credentials: "include",
             withCredentials: true
         };
-        const response = await fetch(`http://localhost:8080/essays`, options);
+        const response = await fetch(`${config.API_URL}/essays`, options);
         if (response.status === 201) {
           setMessage('сочинение сохранено')
           console.log("Сочинение успешно создано")
@@ -116,7 +117,7 @@ const EssayInputPage = () => {
             credentials: "include",
             withCredentials: true
         };
-        const response = await fetch(`http://localhost:8080/essays/` + essayId, options);
+        const response = await fetch(`${config.API_URL}/essays/` + essayId, options);
         if (response.status === 200) {
           setMessage('сочинение сохранено')
           console.log("Текст успешно сохранен")
@@ -150,7 +151,7 @@ const EssayInputPage = () => {
             credentials: "include",
             withCredentials: true
         };
-        const response = await fetch(`http://localhost:8080/essays/`  + essayId + `/save`, options);
+        const response = await fetch(`${config.API_URL}/essays/`  + essayId + `/save`, options);
         if (response.status === 201 || response.status === 200) {
           setMessage('сочинение отправлено на проверку')
           console.log("Сочинение отправлено на проверку")

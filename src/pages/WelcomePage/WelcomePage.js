@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';
+import config from '../../config/config';
 
 function WelcomePage() {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ function WelcomePage() {
       setMessage('введите электронную почту корректно🙄');
     } else {
       try {
-        const response = await fetch(`http://localhost:8080/users/nickname?mail=${encodeURIComponent(email)}`);
+        const response = await fetch(`${config.API_URL}/users/nickname?mail=${encodeURIComponent(email)}`);
         if (response.status === 200) {
           const data = await response.json();
           const nickname = data.nickname;

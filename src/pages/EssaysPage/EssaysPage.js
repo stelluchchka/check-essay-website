@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header/Header';
 import EssayCard from '../../components/EssayCard/EssayCard';
 import './EssaysPage.css';
+import config from '../../config/config';
 
 function EssaysPage() {
   const [essays, setEssays] = useState([]);
@@ -9,7 +10,7 @@ function EssaysPage() {
   useEffect(() => {
     const fetchEssays = async () => {
       try {
-        const response = await fetch('http://localhost:8080/essays');
+        const response = await fetch(`${config.API_URL}/essays`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

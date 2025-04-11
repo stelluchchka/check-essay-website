@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import config from '../../config/config';
 
 function LoginPage() {
   const location = useLocation();
@@ -30,7 +31,7 @@ function LoginPage() {
             credentials: "include",
             withCredentials: true
         };
-        const response = await fetch(`http://localhost:8080/users/login`, options);
+        const response = await fetch(`${config.API_URL}/users/login`, options);
         if (response.status === 200) {
             navigate('/');
         } else if (response.status === 404) {

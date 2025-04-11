@@ -3,6 +3,7 @@ import '../../App.css';
 import './Header.css'
 import { Link, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
+import config from '../../config/config';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,7 +23,7 @@ const Header = () => {
           credentials: "include",
           withCredentials: true
         };
-        const response = await fetch('http://localhost:8080/users/info', options);
+        const response = await fetch(`${config.API_URL}/users/info`, options);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

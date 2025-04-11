@@ -5,6 +5,7 @@ import EssayCard from '../../components/EssayCard/EssayCard';
 import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "universal-cookie";
+import config from '../../config/config';
 
 const data = [
   { name: '01.2024', value: 3 },
@@ -45,7 +46,7 @@ const ProfilePage = () => {
           credentials: "include",
           withCredentials: true
       };
-      const response = await fetch(`http://localhost:8080/users/logout`, options);
+      const response = await fetch(`${config.API_URL}/users/logout`, options);
       if (response.status === 200) {
           navigate('/');
       } else {
@@ -74,7 +75,7 @@ const ProfilePage = () => {
         withCredentials: true,
         body: JSON.stringify({ nickname: newNickname, mail: newMail })
       };
-      const response = await fetch('http://localhost:8080/users', options);
+      const response = await fetch(`${config.API_URL}/users`, options);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -97,7 +98,7 @@ const ProfilePage = () => {
           credentials: "include",
           withCredentials: true
       };
-        const response = await fetch('http://localhost:8080/users/me/essays', options);
+        const response = await fetch(`${config.API_URL}/users/me/essays`, options);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -118,7 +119,7 @@ const ProfilePage = () => {
           credentials: "include",
           withCredentials: true
         };
-        const response = await fetch('http://localhost:8080/users/info', options);
+        const response = await fetch(`${config.API_URL}/users/info`, options);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

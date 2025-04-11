@@ -3,6 +3,7 @@ import Header from '../../components/Header/Header';
 import { useParams, useLocation } from 'react-router-dom';
 import './EssayPage.css';
 import Cookies from "universal-cookie";
+import config from '../../config/config';
 
 function EssayPage() {
   const { id } = useParams();
@@ -93,7 +94,7 @@ function EssayPage() {
   useEffect(() => {
     const fetchIsLiked = async () => {
       try {
-        const likeResponse = await fetch(`http://localhost:8080/likes/is_liked/${id}`, { credentials: 'include' });
+        const likeResponse = await fetch(`${config.API_URL}/likes/is_liked/${id}`, { credentials: 'include' });
         if (!likeResponse.ok) throw new Error('Ошибка проверки лайка');
         
         const likeData = await likeResponse.json();
@@ -108,7 +109,7 @@ function EssayPage() {
     const fetchEssay = async () => {
       if (ifUserEssay) {
         try {
-          const response = await fetch(`http://localhost:8080/users/me/essays/${id}`, { credentials: 'include' });
+          const response = await fetch(`${config.API_URL}/users/me/essays/${id}`, { credentials: 'include' });
           if (!response.ok) throw new Error('Ошибка загрузки сочинения');
           
           const data = await response.json();
@@ -124,7 +125,7 @@ function EssayPage() {
         }
       } else {
       try {
-        const response = await fetch(`http://localhost:8080/essays/${id}`, { credentials: 'include' });
+        const response = await fetch(`${config.API_URL}/essays/${id}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Ошибка загрузки сочинения');
         
         const data = await response.json();
@@ -150,7 +151,7 @@ function EssayPage() {
 
   const handleLikeToggle = async () => {
     try {
-      const url = `http://localhost:8080/likes/${id}`;
+      const url = `${config.API_URL}/likes/${id}`;
       const response = await fetch(url, {
         method: 'PUT',
         credentials: 'include',
@@ -176,7 +177,7 @@ function EssayPage() {
 
   const handlePublishToggle = async () => {
     try {
-      const url = `http://localhost:8080/essays/${id}/publish`;
+      const url = `${config.API_URL}/essays/${id}/publish`;
       const response = await fetch(url, {
         method: 'PUT',
         credentials: 'include',
@@ -195,7 +196,7 @@ function EssayPage() {
 
   const handleAppealToggle = async () => {
     try {
-      const url = `http://localhost:8080/essays/${id}/appeal`;
+      const url = `${config.API_URL}/essays/${id}/appeal`;
       const response = await fetch(url, {
         method: 'PUT',
         credentials: 'include',
@@ -216,7 +217,7 @@ function EssayPage() {
     if (!newComment.trim()) return; // Если комментарий пустой, не отправляем
 
     try {
-      const response = await fetch(`http://localhost:8080/comments/${id}`, {
+      const response = await fetch(`${config.API_URL}/comments/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

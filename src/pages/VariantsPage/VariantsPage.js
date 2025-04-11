@@ -2,13 +2,14 @@ import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import './VariantsPage.css';
+import config from '../../config/config';
 
 function VariantsPage() {
   const navigate = useNavigate();
   const [variantsCount, setVariantsCount] = useState(0);
 
   useEffect(() => {
-        fetch('http://localhost:8080/counts')
+        fetch(`${config.API_URL}/counts`)
         .then(response => response.json())
         .then(data => {
             setVariantsCount(data["variants_count"]);

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateVariantPage.css';
 import Header from '../../components/Header/Header';
-
-const API_URL = 'http://localhost:8080';
+import config from '../../config/config';
 
 const CreateVariantPage = () => {
     const [formData, setFormData] = useState({
@@ -34,7 +33,7 @@ const CreateVariantPage = () => {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/variants`, {
+            const response = await fetch(`${config.API_URL}/variants`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
