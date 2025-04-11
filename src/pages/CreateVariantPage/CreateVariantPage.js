@@ -51,7 +51,7 @@ const CreateVariantPage = () => {
 
             if (response.ok) {
                 setMessage('Вариант сохранен');
-                navigate(`/essay-input/${data.id}`);
+                navigate(`/essays/input/${data.id}`);
             } else {
                 setMessage(data.message || 'Произошла ошибка при сохранении');
             }

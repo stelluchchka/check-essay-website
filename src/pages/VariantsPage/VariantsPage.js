@@ -27,7 +27,7 @@ function VariantsPage() {
         <h2>База вариантов</h2>
         <div className="variant-grid">
           {[...Array(variantsCount)].map((_, i) => (
-            <button key={i} className="variant-btn" onClick={() => navigate(`/essay-input/${i + 1}`)}>вариант {i+1} 
+            <button key={i} className="variant-btn" onClick={() => navigate(`/essays/input/${i + 1}`)}>вариант {i+1} 
         </button>
           ))}
         </div>
