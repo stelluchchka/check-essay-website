@@ -32,6 +32,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState("");
   const [newMail, setNewMail] = useState("");
+  const [isModerator, setIsModerator] = useState(0);
 
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -130,6 +131,7 @@ const ProfilePage = () => {
         setCountEssays(data["count_essays"])
         setCountPublishedEssays(data["count_published_essays"])
         setAverageResult(data["average_result"])
+        setIsModerator(data["is_moderator"])
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
@@ -148,10 +150,14 @@ const ProfilePage = () => {
           <div className="info-text">
             <p className="nickname">{nickname}</p>
             <p className="email">{mail}</p>
+            {!isModerator && 
+            <>
             <p className="results">доступно проверок: {countChecks}</p>
             <p className="results">написано сочинений: {countEssays}</p>
             <p className="results">опубликовано сочинений: {countPublishedEssays}</p>
-            <p className="results">средний результат: {averageResult}</p>
+            <p className="results">средний результат: {averageResult}</p>   
+            </>         
+            }
           </div>
         {isEditing ? (
           <div className="edit-container">
@@ -181,37 +187,40 @@ const ProfilePage = () => {
           </div>
         )}
       </div>
+        {!isModerator && (
+          <>
+            <h2 className="section-title">Прогресс</h2>
+            <div className="chart">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="value" stroke="#01B4BC" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
 
-        <h2 className="section-title">Прогресс</h2>
-        <div className="chart">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="value" stroke="#01B4BC" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <h2 className="section-title">Мои сочинения</h2>
-        <div className="essay-grid">
-          {essays.map((essay) => (
-            <EssayCard
-              key={essay.id}
-              ifUserEssay={true}
-              id={essay.id}
-              nickname={essay.author_nickname}
-              title={essay.variant_title}
-              variant_id={essay.variant_id}
-              score={essay.score}
-              likes={essay.likes}
-              status={essay.status}
-            />
-          ))}
-        </div>
+            <h2 className="section-title">Мои сочинения</h2>
+            <div className="essay-grid">
+              {essays.map((essay) => (
+                <EssayCard
+                  key={essay.id}
+                  ifUserEssay={true}
+                  id={essay.id}
+                  nickname={essay.author_nickname}
+                  title={essay.variant_title}
+                  variant_id={essay.variant_id}
+                  score={essay.score}
+                  likes={essay.likes}
+                  status={essay.status}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
