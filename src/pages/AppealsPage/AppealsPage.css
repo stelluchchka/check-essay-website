@@ -16,4 +16,21 @@
     margin-left: 3vw;
     margin-right: 3vw;
   }
-  
+
+.no-appeals-message {
+  width: 100%;
+  text-align: center;
+  font-size: 32px;
+  color: #000;
+  padding: 3rem;
+  font-weight: 800;
+}
+
+.essay .essay-grid .no-appeals-message {
+  width: 100%;
+  text-align: center;
+  font-size: 21px !important;
+  color: #000;
+  padding: 3rem;
+  font-weight: 500;
+}

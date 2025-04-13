@@ -29,23 +29,27 @@ function AppealsPage() {
       <Header />
       <main>
         <section className="essay">
-          <h2>Аппеляции</h2>
+          <h2>Апелляции</h2>
           <div className="essay-grid">
-            {essays.map((essay) => (
-              <EssayCard
-                key={essay.id}
-                id={essay.id}
-                ifUserEssay={false}
-                ifAppeal={true}
-                nickname={essay.author_nickname}
-                title={essay.variant_title}
-                variant_id={essay.variant_id}
-                score={essay.score}
-                likes={essay.likes}
-              />
-            ))}
+            {essays.length > 0 ? (
+              essays.map((essay) => (
+                <EssayCard
+                  key={essay.id}
+                  id={essay.id}
+                  ifUserEssay={false}
+                  ifAppeal={true}
+                  nickname={essay.author_nickname}
+                  title={essay.variant_title}
+                  variant_id={essay.variant_id}
+                  score={essay.score}
+                  likes={essay.likes}
+                />
+              ))
+            ) : (
+              <p className="no-appeals-message">На данный момент нет активных апелляций</p>
+            )}
           </div>
-          </ section>
+        </section>
       </main>
     </div>
   );
