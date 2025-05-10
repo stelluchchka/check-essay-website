@@ -10,6 +10,8 @@ function EssayPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [essay, setEssay] = useState(null);
   const [status, setStatus] = useState('');
+  const [results, setResults] = useState(null)
+  const [criteria, setCriteria] = useState([]);
   const [isPublished, setIsPublished] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -20,77 +22,29 @@ function EssayPage() {
   const navigate = useNavigate();
   const ifUserEssay = location.state?.ifUserEssay || false;
 
+  const lastResult = Array.isArray(results) && results.length > 0 ? results[results.length - 1] : null;
+  const getScoreKey = (index) => `K${index + 1}_score`;
+  const getExplanationKey = (index) => `K${index + 1}_explanation`;
+
   const cookies = new Cookies();
   useEffect(() => {
     const session = cookies.get("session");
     setIsLoggedIn(!!session);
   }, []);
 
-
-  const criteria = [
-    {
-      id: "K1",
-      title: "Отражение позиции автора по указанной проблеме исходного текста",
-      content:
-        "Позиция ученика в целом верно отражает позицию автора. Ученик правильно указал, что внешняя цель человека не всегда соответствует его сущности.",
-      points: 1,
-    },
-    {
-      id: "K2",
-      title: "Комментарий к позиции автора по указанной проблеме исходного текста",
-      content: "Комментарий должен включать примеры и пояснения, которые обосновывают позицию автора.",
-      points: 2,
-    },
-    {
-      id: "K3",
-      title: "Собственное отношение к позиции автора по указанной проблеме",
-      content: "Ученик высказывает свою точку зрения и аргументирует её с опорой на содержание текста.",
-      points: 2,
-    },
-    {
-      id: "K4",
-      title: "Фактическая точность речи",
-      content: "Ответ должен быть точным, без фактических ошибок в описании событий или выводах.",
-      points: 1,
-    },
-    {
-      id: "K5",
-      title: "Логичность речи",
-      content: "Текст должен быть логически связанным и последовательным.",
-      points: 1,
-    },
-    {
-      id: "K6",
-      title: "Соблюдение этических норм",
-      content: "Ответ не должен содержать неэтичные высказывания или нарушать нормы общения.",
-      points: 1,
-    },
-    {
-      id: "K7",
-      title: "Соблюдение орфографических норм",
-      content: "Ответ должен быть написан без орфографических ошибок.",
-      points: 1,
-    },
-    {
-      id: "K8",
-      title: "Соблюдение пунктуационных норм",
-      content: "Текст должен соответствовать правилам пунктуации.",
-      points: 1,
-    },
-    {
-      id: "K9",
-      title: "Соблюдение грамматических норм",
-      content: "Ответ не должен содержать грамматических ошибок.",
-      points: 1,
-    },
-    {
-      id: "K10",
-      title: "Соблюдение речевых норм",
-      content: "Речь должна быть ясной, выразительной и соответствовать ситуации.",
-      points: 1,
-    },
-  ];
-
+  useEffect(() => {
+    const fetchCriteria = async () => {
+      try {
+        const response = await fetch(`${config.API_URL}/criteria`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Ошибка загрузки критериев');
+        const data = await response.json();
+        setCriteria(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchCriteria();
+  }, []);
 
   useEffect(() => {
     const fetchIsLiked = async () => {
@@ -118,6 +72,7 @@ function EssayPage() {
           setLikes(data["likes"]);
           setIsPublished(data["is_published"])
           setStatus(data["status"])
+          setResults(data["results"])
   
         } catch (error) {
           console.error('Ошибка загрузки:', error);
@@ -134,6 +89,7 @@ function EssayPage() {
         setLikes(data["likes"]);
         setIsPublished(data["is_published"])
         setStatus(data["status"])
+        setResults(data["results"])
 
       } catch (error) {
         console.error('Ошибка загрузки:', error);
@@ -291,33 +247,42 @@ function EssayPage() {
 
         </div>
         <section className="result-content">
-          <table className="result-table">
-            <thead>
-              <tr>
-                <th>№</th>
-                <th>Критерий</th>
-                <th>Пояснение</th>
-                <th>Баллы</th>
-              </tr>
-            </thead>
-            <tbody>
-              {criteria.map((criterion, index) => (
-                <tr key={criterion.id}>
-                  <td>K{index + 1}</td>
-                  <td>{criterion.title}</td>
-                  <td>{criterion.content}</td>
-                  <td className="points">{criterion.points}</td>
-                </tr>
-              ))}
-              <tr>
-              <td colSpan="3" style={{ fontWeight: "bold", textAlign: "left" }}>Сумма баллов:</td>
-              <td className="points" style={{ fontWeight: "bold" }}>
-                {criteria.reduce((sum, criterion) => sum + criterion.points, 0)}
-              </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+      <table className="result-table">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Критерий</th>
+            <th>Пояснение</th>
+            <th>Баллы</th>
+            <th>Макс.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {criteria.map((criterion, index) => (
+            <tr key={criterion.id}>
+              <td>K{index + 1}</td>
+              <td>{criterion.title}</td>
+              <td>{lastResult ? lastResult[getExplanationKey(index)] : ''}</td>
+              <td className="points">{lastResult ? lastResult[getScoreKey(index)] : ''}</td>
+              <td className="points">{criterion.max_score}</td>
+            </tr>
+          ))}
+        <tr>
+          <td colSpan="3" style={{ fontWeight: "bold", textAlign: "left" }}>Сумма баллов:</td>
+          <td className="points" style={{ fontWeight: "bold" }}>
+            {lastResult
+              ? lastResult.score !== undefined
+                ? lastResult.score
+                : criteria.reduce((sum, _, i) => sum + (lastResult[`K${i + 1}_score`] || 0), 0)
+              : ''}
+          </td>
+          <td className="points" style={{ fontWeight: "bold" }}>
+            {criteria.reduce((sum, c) => sum + (c.max_score || 0), 0)}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
 
       {isPublished && 
         <div>
