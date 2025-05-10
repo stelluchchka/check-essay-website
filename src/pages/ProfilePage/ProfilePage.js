@@ -7,22 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from "universal-cookie";
 import config from '../../config/config';
 
-const data = [
-  { name: '01.2024', value: 3 },
-  { name: '02.2024', value: 10 },
-  { name: '03.2024', value: 8 },
-  { name: '04.2024', value: 14 },
-  { name: '05.2024', value: 12 },
-  { name: '06.2024', value: 15 },
-  { name: '07.2024', value: 11 },
-  { name: '08.2024', value: 13 },
-  { name: '09.2024', value: 15 },
-  { name: '10.2024', value: 18 },
-  { name: '11.2024', value: 20 }
-];
-
 const ProfilePage = () => {
   const [essays, setEssays] = useState([]);
+  const [results, setResults] = useState([]);
   const [nickname, setNickname] = useState("nickname");
   const [countChecks, setCountChecks] = useState(0);
   const [mail, setMail] = useState("example@mail.ru");
@@ -137,6 +124,32 @@ const ProfilePage = () => {
       }
     };
 
+    const fetchResults = async () => {
+      try {
+        const response = await fetch(`${config.API_URL}/users/me/results`, {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        
+        // Transform data for the chart
+        const chartData = data.map(result => ({
+          name: new Date(result.completed_at).toLocaleDateString('ru-RU', {
+            month: 'numeric',
+            year: '2-digit'
+          }),
+          value: result.score
+        }));
+        
+        setResults(chartData);
+      } catch (error) {
+        console.error('Error fetching results:', error);
+      }
+    };
+
+    fetchResults();
     fetchEssays();
     fetchUserInfo();
   }, []); 
@@ -192,7 +205,7 @@ const ProfilePage = () => {
             <h2 className="section-title">Прогресс</h2>
             <div className="chart">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data}>
+                <LineChart data={results}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
