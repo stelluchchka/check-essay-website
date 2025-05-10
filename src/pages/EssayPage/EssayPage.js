@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header/Header';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './EssayPage.css';
 import Cookies from "universal-cookie";
 import config from '../../config/config';
@@ -17,6 +17,7 @@ function EssayPage() {
   const [newComment, setNewComment] = useState('');
 
   const location = useLocation();
+  const navigate = useNavigate();
   const ifUserEssay = location.state?.ifUserEssay || false;
 
   const cookies = new Cookies();
@@ -194,23 +195,10 @@ function EssayPage() {
     }
   };
 
-  const handleAppealToggle = async () => {
-    try {
-      const url = `${config.API_URL}/essays/${id}/appeal`;
-      const response = await fetch(url, {
-        method: 'PUT',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при подаче апелляции');
-      }
-      console.log("Сочинение подано на апелляцию")
-      setStatus("appeal")
-
-    } catch (error) {
-      console.error(error.message);
-    }
+  const handleAppealToggle = () => {
+    navigate(`/essays/appeal/${id}`, { 
+      state: { ifUserEssay: true } 
+    });
   };
 
   const handleAddComment = async () => {

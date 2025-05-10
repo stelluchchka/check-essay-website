@@ -15,7 +15,9 @@ const EssayCard = ({ ifUserEssay, ifAppeal, id, title, nickname, variant_id, sco
       </div>
       <div className='essay-card-right'>
         {status === "saved" ? (
-          <p className="checking-status">Сочинение на проверке</p>
+          <p className="checking-status">на проверке</p>
+        ) : status === "appeal" ? (
+          <p className="checking-status">на апелляции</p>
         ) : (
           <Link to={ifAppeal ? `/essays/check/${id}` : status==="draft" ? `/essays/input/${variant_id}` : `/essays/${id}`} state={{ ifUserEssay, id }}>
             <button className="btn-read">

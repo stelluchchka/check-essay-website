@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AppealsPage from './pages/AppealsPage/AppealsPage';
 import CreateVariantPage from './pages/CreateVariantPage/CreateVariantPage';
 import CheckEssayPage from './pages/CheckEssayPage/CheckEssayPage';
+import AppealInputPage from './pages/AppealInputPage/AppealInputPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/essays/:id" element={<EssayPage />} />
         <Route path="/essays/input/:id" element={<EssayInputPage />} />
         <Route path='/essays/check/:id' element={<CheckEssayPage />} />
+        <Route path="/essays/appeal/:id" element={<AppealInputPage/>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
