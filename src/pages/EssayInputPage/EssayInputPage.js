@@ -71,63 +71,61 @@ const EssayInputPage = () => {
   const handleSave = async () => {
     if (!essayText) {
       setMessage('введите текст сочинения!')
+      return false;
     }
-    else if (essayId === 0) {
+    
+    if (essayId === 0) {
       try {
         const data = {
-            variant_id: id,
-            essay_text: essayText,
+          variant_id: id,
+          essay_text: essayText,
         };
         
         const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-            credentials: "include",
-            withCredentials: true
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+          withCredentials: true
         };
         const response = await fetch(`${config.API_URL}/essays`, options);
-        if (response.status === 201) {
-          setMessage('сочинение сохранено')
-          console.log("Сочинение успешно создано")
-          const data = await response.json();
-          setEssayId(data["essay_id"])
-        } else if (response.status === 404) {
-          console.log('Ошибка в тексте');
-        } else {
-          console.log('Ошибка сервера');
+        if (response.ok) {
+          const responseData = await response.json();
+          setEssayId(responseData.essay_id);
+          setMessage('сочинение сохранено');
+          return true;
         }
+        return false;
       } catch (error) {
         console.log('Ошибка подключения к серверу');
+        return false;
       }
     } else {
       try {
         const data = {
-            essay_text: essayText,
+          essay_text: essayText,
         };
         
         const options = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-            credentials: "include",
-            withCredentials: true
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+          withCredentials: true
         };
-        const response = await fetch(`${config.API_URL}/essays/` + essayId, options);
-        if (response.status === 200) {
-          setMessage('сочинение сохранено')
-          console.log("Текст успешно сохранен")
-        } else if (response.status === 404) {
-          console.log('Ошибка в тексте');
-        } else {
-          console.log('Ошибка сервера');
+        const response = await fetch(`${config.API_URL}/essays/${essayId}`, options);
+        if (response.ok) {
+          setMessage('сочинение сохранено');
+          return true;
         }
+        return false;
       } catch (error) {
         console.log('Ошибка подключения к серверу');
+        return false;
       }
     }
   };
@@ -135,38 +133,42 @@ const EssayInputPage = () => {
   const handleCheck = async () => {
     if ((essayText.match(/[А-Яа-яЁёA-Za-z]+(?:-[А-Яа-яЁёA-Za-z]+)?/g) || []).length < 250) {
       setMessage('текст сочинения должен быть больше 250 символов!')
-    } else {
-      handleSave()
-      try {
-        const data = {
-            variant_id: id,
-            essay_text: essayText,
-        };
-        const options = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-            credentials: "include",
-            withCredentials: true
-        };
-        const response = await fetch(`${config.API_URL}/essays/`  + essayId + `/save`, options);
-        if (response.status === 201 || response.status === 200) {
-          setMessage('сочинение отправлено на проверку')
-          console.log("Сочинение отправлено на проверку")
-
-          console.log(response)
-          const result = await response.json();
-          const essay_id = result.essay_id;
-          setEssayId(essay_id)
-          navigate('/profile');
-        } else {
-          console.log('Ошибка сервера');
-        }
-      } catch (error) {
-        console.log('Ошибка подключения к серверу');
+      return;
+    }
+  
+    try {
+      const saveSuccess = await handleSave();
+      if (!saveSuccess) {
+        setMessage('ошибка при сохранении сочинения');
+        return;
       }
+  
+      const data = {
+        variant_id: id,
+        essay_text: essayText,
+      };
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+        withCredentials: true
+      };
+      const response = await fetch(`${config.API_URL}/essays/${essayId}/save`, options);
+      
+      if (response.ok) {
+        setMessage('сочинение отправлено на проверку');
+        navigate('/profile');
+      } else if (response.status === 400) {
+        setMessage('у вас закончились доступные проверки');
+      } else {
+        setMessage('ошибка сервера');
+      }
+    } catch (error) {
+      console.log('Ошибка подключения к серверу');
+      setMessage('ошибка подключения к серверу');
     }
   };
 
@@ -235,7 +237,9 @@ const EssayInputPage = () => {
         <div className="button-container">
           {message && <div className="message">{message}</div>}
           <button className="save-btn" onClick={handleSave}>сохранить</button>
+          {essayId !== 0 &&
           <button className="check-btn" onClick={handleCheck}>проверить</button>
+          }
         </div>
     </div>
   );

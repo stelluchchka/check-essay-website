@@ -54,7 +54,7 @@ const Header = () => {
               <div className="nav-container">
                 <div className="header-right-content">
                   <Link to="/" className={currentUrl==="/" ? "active-link": "link"}>главная</Link>
-                  <Link to="/appeals" className={currentUrl==="/appels" ? "active-link": "link"}>аппеляции</Link>
+                  <Link to="/appeals" className={currentUrl==="/appels" ? "active-link": "link"}>апелляции</Link>
                   <Link to="/profile" className={currentUrl==="/profile" ? "active-link": "link"}>профиль</Link>
                 </div>
               </div>    

@@ -10,7 +10,14 @@ function AppealsPage() {
   useEffect(() => {
     const fetchEssays = async () => {
       try {
-        const response = await fetch(`${config.API_URL}/essays/appeal`,);
+        const response = await fetch(`${config.API_URL}/essays/appeal`, {
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          credentials: "include",
+          withCredentials: true
+      });
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
