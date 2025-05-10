@@ -18,6 +18,7 @@ const EssayInputPage = () => {
   const [variantTitle, setVariantTitle] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const location = useLocation();
   const essay_id = location.state?.id || 0;
@@ -131,12 +132,13 @@ const EssayInputPage = () => {
   };
 
   const handleCheck = async () => {
-    if ((essayText.match(/[А-Яа-яЁёA-Za-z]+(?:-[А-Яа-яЁёA-Za-z]+)?/g) || []).length < 250) {
-      setMessage('текст сочинения должен быть больше 250 символов!')
+    if ((essayText.match(/[А-Яа-яЁёA-Za-z]+(?:-[А-Яа-яЁёA-Za-z]+)?/g) || []).length < 150) {
+      setMessage('текст сочинения должен быть больше 150 символов!')
       return;
     }
   
     try {
+      setIsSaving(true); // Start loading
       const saveSuccess = await handleSave();
       if (!saveSuccess) {
         setMessage('ошибка при сохранении сочинения');
@@ -161,7 +163,7 @@ const EssayInputPage = () => {
       if (response.ok) {
         setMessage('сочинение отправлено на проверку');
         navigate('/profile');
-      } else if (response.status === 400) {
+      } else if (response.status === 404) {
         setMessage('у вас закончились доступные проверки');
       } else {
         setMessage('ошибка сервера');
@@ -169,6 +171,8 @@ const EssayInputPage = () => {
     } catch (error) {
       console.log('Ошибка подключения к серверу');
       setMessage('ошибка подключения к серверу');
+    } finally {
+      setIsSaving(false); // End loading
     }
   };
 
@@ -236,11 +240,28 @@ const EssayInputPage = () => {
       </div>
         <div className="button-container">
           {message && <div className="message">{message}</div>}
-          <button className="save-btn" onClick={handleSave}>сохранить</button>
+          <button 
+            className="save-btn" 
+            onClick={handleSave} 
+            disabled={isSaving}
+          >
+            сохранить
+          </button>
           {essayId !== 0 &&
-          <button className="check-btn" onClick={handleCheck}>проверить</button>
+            <button 
+              className="check-btn" 
+              onClick={handleCheck}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Отправка...' : 'проверить'}
+            </button>
           }
         </div>
+        {isSaving && (
+          <div className="loading-overlay">
+            <div className="loading-spinner">Отправка сочинения на проверку...</div>
+          </div>
+        )}
     </div>
   );
 };
