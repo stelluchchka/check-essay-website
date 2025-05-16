@@ -253,7 +253,7 @@ const EssayInputPage = () => {
               onClick={handleCheck}
               disabled={isSaving}
             >
-              {isSaving ? 'Отправка...' : 'проверить'}
+              {isSaving ? 'отправка...' : 'проверить'}
             </button>
           }
         </div>

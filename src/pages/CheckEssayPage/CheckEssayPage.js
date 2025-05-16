@@ -148,19 +148,33 @@ function CheckEssayPage() {
                 <tr key={criterion.id}>
                   <td>K{index + 1}</td>
                   <td>{criterion.title}</td>
-                  <td>{criterion.content}</td>
-                  <td className="points">{criterion.points}</td>
+                  <td>{essay.results[0][`K${index + 1}_explanation`] || ''}</td>
+                  <td className="points">{essay.results[0][`K${index + 1}_score`] || 0}</td>
                 </tr>
               ))}
               <tr>
               <td colSpan="3" style={{ fontWeight: "bold", textAlign: "left" }}>Сумма баллов:</td>
               <td className="points" style={{ fontWeight: "bold" }}>
-                {criteria.reduce((sum, criterion) => sum + criterion.points, 0)}
+              {essay.results[0].score || 
+                Object.keys(essay.results[0])
+                  .filter(key => key.endsWith('_score'))
+                  .reduce((sum, key) => sum + (essay.results[0][key] || 0), 0)
+              }
               </td>
               </tr>
             </tbody>
           </table>
         </section>
+
+        <section className="appeal-content">
+          <div className="appeal-container">
+            <h3>Текст апелляции:</h3>
+            <div className="appeal-text">
+              {essay.results[0].appeal_text || 'Текст апелляции отсутствует'}
+            </div>
+          </div>
+        </section>
+
         <section className="result-content">
             <div className="result-grid">
             {criteria.map((criterion) => (
