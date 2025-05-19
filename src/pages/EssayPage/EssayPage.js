@@ -158,8 +158,8 @@ function EssayPage() {
   };
 
   const handleAddComment = async () => {
-    if (!newComment.trim()) return; // Если комментарий пустой, не отправляем
-
+    if (!newComment.trim()) return;
+  
     try {
       const response = await fetch(`${config.API_URL}/comments/${id}`, {
         method: 'POST',
@@ -169,24 +169,19 @@ function EssayPage() {
         body: JSON.stringify({ comment_text: newComment }),
         credentials: 'include',
       });
-
+  
       if (!response.ok) {
         throw new Error('Ошибка при добавлении комментария');
       }
-
+  
       const newCommentData = await response.json();
       setNewComment('');
-
-      setEssay((prevEssay) => {
-        const updatedEssay = {
-          ...prevEssay,
-          comments: [newCommentData, ...prevEssay.comments],
-        };
-        return updatedEssay;
-      });
-
-
-
+  
+      setEssay((prevEssay) => ({
+        ...prevEssay,
+        comments: prevEssay.comments ? [newCommentData, ...prevEssay.comments] : [newCommentData]
+      }));
+  
     } catch (error) {
       console.error(error.message);
     }
