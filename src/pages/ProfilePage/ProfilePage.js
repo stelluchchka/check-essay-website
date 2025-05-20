@@ -137,8 +137,8 @@ const ProfilePage = () => {
         // Transform data for the chart
         const chartData = data.map(result => ({
           name: new Date(result.completed_at).toLocaleDateString('ru-RU', {
+            day: 'numeric',
             month: 'numeric',
-            year: '2-digit'
           }),
           value: result.score
         }));
