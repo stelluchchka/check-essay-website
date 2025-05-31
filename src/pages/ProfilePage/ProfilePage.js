@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label } from 'recharts';
 import './ProfilePage.css';
 import EssayCard from '../../components/EssayCard/EssayCard';
 import Header from '../../components/Header/Header';
@@ -205,10 +205,27 @@ const ProfilePage = () => {
             <h2 className="section-title">Прогресс</h2>
             <div className="chart">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={results}>
+                <LineChart 
+                  data={results}
+                  margin={{ top: 35, right: 25, left: 0, bottom: 15 }} 
+                >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
+                  <XAxis dataKey="name">
+                    <Label 
+                      value="Дата" 
+                      position="insideBottomRight" 
+                      offset={-10}
+                      style={{ textAnchor: 'end' }}
+                    />
+                  </XAxis>
+                  <YAxis>
+                    <Label 
+                      value="Баллы" 
+                      position="top" 
+                      offset={20}
+                      style={{ textAnchor: 'middle' }}
+                    />
+                  </YAxis>
                   <Tooltip />
                   <Line type="monotone" dataKey="value" stroke="#01B4BC" strokeWidth={2} />
                 </LineChart>
